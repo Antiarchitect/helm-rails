@@ -10,10 +10,10 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.externalPort }}
+    - protocol: TCP
       targetPort: {{ .Values.service.internalPort }}
-      protocol: TCP
-      name: {{ .Values.service.name }}
+      port: 3000
+      nodePort: 30100
   selector:
     app: {{ template "helm-rails.name" . }}
     release: {{ .Release.Name }}

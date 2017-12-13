@@ -18,13 +18,21 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.service.internalPort }}
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: {{ .Values.service.internalPort }}
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: {{ .Values.service.internalPort }}
           volumeMounts:
             - name: app-workdir
               mountPath: "/service"
-          command: ["rails", "server", "-b", "0.0.0.0"]
+          command: ["rails", "server", "-b", "0.0.0.0", "-p", "{{ .Values.service.internalPort }}"]
       volumes:
         - name: app-workdir
           persistentVolumeClaim:
