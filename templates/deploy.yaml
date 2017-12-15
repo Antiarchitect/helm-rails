@@ -32,7 +32,8 @@ spec:
           volumeMounts:
             - name: app-workdir
               mountPath: "/service"
-          command: ["rails", "server", "-b", "0.0.0.0", "-p", "{{ .Values.service.internalPort }}"]
+          command: ["/bin/sh"]
+          args: ["-c", "cat tmp/pids/server.pid && rm -f tmp/pids/server.pid || true && rails server -b 0.0.0.0 -p {{ .Values.service.internalPort }}"]
       volumes:
         - name: app-workdir
           persistentVolumeClaim:
