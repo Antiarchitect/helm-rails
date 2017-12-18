@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "helm-rails.fullname" . }}
+  name: app-workdir-pvc
   labels:
     app: {{ template "helm-rails.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -14,4 +14,4 @@ spec:
   resources:
     requests:
       storage: 500Mi
-  volumeName: {{ template "helm-rails.fullname" . }}
+  volumeName: app-workdir-pv
