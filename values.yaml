@@ -9,11 +9,21 @@ service:
 
 databaseType:
   postgresql: true
-postgresql:
+postgresql-dev:
   image: my-postgresql-dev
   imageTag: latest
   imagePullPolicy: IfNotPresent
+  postgresDatabase: dev
+  postgresPassword: password
   persistence:
     enabled: true
     existingClaim: app-workdir-pvc
     subPath: ".data/postgresql"
+postgresql-test:
+  image: my-postgresql-dev
+  imageTag: latest
+  imagePullPolicy: IfNotPresent
+  postgresDatabase: test
+  postgresPassword: password
+  persistence:
+    enabled: false

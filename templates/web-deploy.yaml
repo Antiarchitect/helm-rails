@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "helm-rails.fullname" . }}
+  labels:
+    app: {{ template "helm-rails.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "helm-rails.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: "postgres://postgres:password@my-rails-dev-postgresql-dev/dev"
+#        - name: SECRET_KEY_BASE
+#          valueFrom:
+#            secretKeyRef:
+#              name: app-secrets
+#              key: secret-key-base
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        volumeMounts:
+        - name: app-workdir
+          mountPath: "/service"
+        command: ["/bin/sh"]
+        args: ["-c", "cat tmp/pids/server.pid && rm -f tmp/pids/server.pid || true && rails server -b 0.0.0.0 -p {{ .Values.service.internalPort }}"]
+      volumes:
+        - name: app-workdir
+          persistentVolumeClaim:
+            claimName: app-workdir-pvc

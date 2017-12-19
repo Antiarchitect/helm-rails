@@ -1,5 +1,11 @@
 dependencies:
   - name: postgresql
+    alias: postgresql-dev
     version: 0.8.4
     repository: https://kubernetes-charts.storage.googleapis.com/
     condition: databaseType.postgresql
+#  - name: postgresql
+#    alias: postgresql-test
+#    version: 0.8.4
+#    repository: https://kubernetes-charts.storage.googleapis.com/
+#    condition: databaseType.postgresql
