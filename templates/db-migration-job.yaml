@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "helm-rails.fullname" . }}
+  name: {{ template "helm-rails.fullname" . }}-migration
   labels:
     app: {{ template "helm-rails.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -17,13 +17,13 @@ spec:
       restartPolicy: Never
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: IfNotPresent
+          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           env:
           - name: DATABASE_URL
             value: "postgres://postgres:password@my-rails-dev-postgresql-dev/dev"
           ports:
-            - containerPort: {{ .Values.service.internalPort }}
+            - containerPort: {{ .Values.web.service.internalPort }}
           volumeMounts:
             - name: app-workdir
               mountPath: "/service"

@@ -1,11 +1,12 @@
-replicaCount: 1
-image:
-  repository: my-rails-dev
-  tag: latest
-  pullPolicy: IfNotPresent
-service:
-  type: NodePort
-  internalPort: 3000
+web:
+  replicasCount: 2
+  image:
+    repository: my-rails-dev
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    internalPort: 3000
 
 databaseType:
   postgresql: true
@@ -27,3 +28,6 @@ postgresql-test:
   postgresPassword: password
   persistence:
     enabled: false
+
+volumes:
+  appdir: "/app"

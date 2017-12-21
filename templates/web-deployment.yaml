@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.web.replicasCount }}
   template:
     metadata:
       labels:
@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: IfNotPresent
+        image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
+        imagePullPolicy: {{ .Values.web.image.pullPolicy }}
         env:
         - name: DATABASE_URL
           value: "postgres://postgres:password@my-rails-dev-postgresql-dev/dev"
@@ -28,12 +28,12 @@ spec:
 #              name: app-secrets
 #              key: secret-key-base
         ports:
-        - containerPort: {{ .Values.service.internalPort }}
+        - containerPort: {{ .Values.web.service.internalPort }}
         volumeMounts:
         - name: app-workdir
           mountPath: "/service"
         command: ["/bin/sh"]
-        args: ["-c", "cat tmp/pids/server.pid && rm -f tmp/pids/server.pid || true && rails server -b 0.0.0.0 -p {{ .Values.service.internalPort }}"]
+        args: ["-c", "cat tmp/pids/server.pid && rm -f tmp/pids/server.pid || true && rails server -b 0.0.0.0 -p {{ .Values.web.service.internalPort }}"]
       volumes:
         - name: app-workdir
           persistentVolumeClaim:

@@ -8,10 +8,10 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.web.service.type }}
   ports:
     - protocol: TCP
-      targetPort: {{ .Values.service.internalPort }}
+      targetPort: {{ .Values.web.service.internalPort }}
       port: 3000
       nodePort: 31000
   selector:
