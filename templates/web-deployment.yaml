@@ -18,6 +18,7 @@ spec:
       initContainers:
         - name: init-{{ .Chart.Name }}
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           command: ['sh', '-c', 'rm -f tmp/pids/*']
       containers:
       - name: {{ .Chart.Name }}
