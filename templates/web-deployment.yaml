@@ -15,6 +15,10 @@ spec:
         app: {{ template "helm-rails.name" . }}
         release: {{ .Release.Name }}
     spec:
+      initContainers:
+        - name: init-{{ .Chart.Name }}
+          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
+          command: ['sh', '-c', 'rm -f tmp/pids/*']
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
