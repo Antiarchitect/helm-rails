@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "helm-rails.name" . }}-webserver
+  name: {{ .Release.Name }}-webserver
   labels:
     app: {{ template "helm-rails.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
