@@ -16,7 +16,19 @@ spec:
         release: {{ .Release.Name }}
     spec:
       initContainers:
-        - name: init-{{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-migration
+          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          env:
+          - name: DATABASE_URL
+            value: "postgres://postgres:password@my-rails-dev-postgresql-dev/dev"
+          volumeMounts:
+            - name: app-workdir
+              mountPath: "/service"
+          command: ["/bin/sh"]
+          args: ["-c", "rails db:migrate"]
+      initContainers:
+        - name: {{ .Chart.Name }}-pidfiles-cleanup
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           command: ['sh', '-c', 'rm -f tmp/pids/*']
@@ -27,11 +39,6 @@ spec:
         env:
         - name: DATABASE_URL
           value: "postgres://postgres:password@my-rails-dev-postgresql-dev/dev"
-#        - name: SECRET_KEY_BASE
-#          valueFrom:
-#            secretKeyRef:
-#              name: app-secrets
-#              key: secret-key-base
         ports:
         - containerPort: {{ .Values.web.service.internalPort }}
         volumeMounts:
