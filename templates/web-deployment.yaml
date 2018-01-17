@@ -27,7 +27,6 @@ spec:
               mountPath: "/service"
           command: ["/bin/sh"]
           args: ["-c", "rails db:migrate"]
-      initContainers:
         - name: {{ .Chart.Name }}-pidfiles-cleanup
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
